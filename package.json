@@ -1,0 +1,10 @@
+{
+  "name": "rules_js_bug_447",
+  "version": "0.0.0",
+  "type": "module",
+  "dependencies": {
+    "@types/mocha": "^9.1.1",
+    "@types/node": "^18.7.15",
+    "mocha": "^10.0.0"
+  }
+}

@@ -1,0 +1,51 @@
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@aspect_rules_swc//swc:defs.bzl", "swc_transpiler")
+load("@bazel_skylib//lib:partial.bzl", "partial")
+load("@npm//:mocha/package_json.bzl", mocha_bin = "bin")
+
+ts_project(
+    name = "src",
+    srcs = [
+        "src.ts",
+    ],
+    declaration = True,
+    transpiler = partial.make(
+        swc_transpiler,
+        source_maps = "true",
+        swcrc = "//:swcrc_esm",
+    ),
+    tsconfig = "//:tsconfig",
+    deps = [
+        "//:node_modules/@types/node",
+    ],
+)
+
+ts_project(
+    name = "src_test_lib",
+    srcs = [
+        "src.test.ts",
+    ],
+    declaration = True,
+    transpiler = partial.make(
+        swc_transpiler,
+        source_maps = "true",
+        swcrc = "//:swcrc_esm",
+    ),
+    tsconfig = "//:tsconfig",
+    deps = [
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/mocha",
+    ],
+)
+
+mocha_bin.mocha_test(
+    name = "src_test",
+    args = [
+        "\"$(rootpath :src.test.js)\"",
+    ],
+    data = [
+        ":src.test.js",
+        ":src_test_lib",
+        "//:node_modules/mocha",
+    ],
+)
